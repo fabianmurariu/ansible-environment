@@ -6,7 +6,6 @@ Vagrant.require_version ">= 1.7.0"
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    config.vm.define "main"
 
     config.vm.box = "ubuntu/trusty64"
 
@@ -20,25 +19,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # See https://github.com/mitchellh/vagrant/issues/5005
     config.ssh.insert_key = false
 
-    # Provision Ansible into the environment
-    config.vm.provision "shell", inline: "export DEBIAN_FRONTEND=noninteractive"
-    config.vm.provision "shell", inline: "sudo apt-get install -y -q software-properties-common"
-    config.vm.provision "shell", inline: "sudo apt-add-repository -y ppa:ansible/ansible"
-    config.vm.provision "shell", inline: "sudo apt-get update -q"
-    config.vm.provision "shell", inline: "sudo apt-get install -y -q ansible"
+    # Installs latest Ansible release (stable functionality)
+    config.vm.define "latest", primary: true do |latest|
+        latest.vm.provision "shell", path: "bootstrap-latest.sh"
+        latest.vm.provision "shell", path: "bootstrap-common.sh"
+    end
 
-    # Install Ansible's AWS dependencies
-    config.vm.provision "shell", inline: "sudo apt-get install -y -q python-pip"
-    config.vm.provision "shell", inline: "sudo pip install boto"
-
-    # Configure Ansible to use a dynamic AWS inventory
-    config.vm.provision "shell", inline: "wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py"
-    config.vm.provision "shell", inline: "sudo mv ec2.py /etc/ansible/hosts"
-    config.vm.provision "shell", inline: "sudo chmod +x /etc/ansible/hosts"
-    config.vm.provision "shell", inline: "wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini"
-    config.vm.provision "shell", inline: "sudo mv ec2.ini /etc/ansible/ec2.ini"
-
-    # Configure the default user's environment to use Ansible with AWS
+    # Makes and installs the development branch of Ansible (bleeding edge functionality)
+    config.vm.define "development", primary: true do |development|
+        development.vm.provision "shell", path: "bootstrap-development.sh"
+        development.vm.provision "shell", path: "bootstrap-common.sh"
+    end
 
     # Sync the user's home folder
     config.vm.synced_folder "~/", "/home/host-machine"
