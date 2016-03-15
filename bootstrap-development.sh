@@ -19,4 +19,4 @@ cd ./ansible
 make deb
 sudo make install
 
-mkdir /etc/ansible/
+sudo mkdir -p /etc/ansible/
