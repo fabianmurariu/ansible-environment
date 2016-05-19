@@ -7,6 +7,7 @@ sudo apt-get --no-install-recommends install -y -q build-essential
 sudo apt-get --no-install-recommends install -y -q git
 sudo apt-get --no-install-recommends install -y -q asciidoc devscripts
 sudo apt-get --no-install-recommends install -y -q python-support cdbs debhelper
+sudo apt-get --no-install-recommends install -y -q wget
 
 sudo apt-get install -y -q libssl-dev
 sudo apt-get install -y -q libffi-dev
