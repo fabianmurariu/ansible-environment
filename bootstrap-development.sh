@@ -8,6 +8,7 @@ sudo apt-get install -y -q git
 sudo apt-get install -y -q asciidoc devscripts
 sudo apt-get install -y -q python-support cdbs debhelper
 sudo apt-get install -y -q python-pip
+sudo apt-get install -y -q python-dev
 sudo pip install setuptools
 sudo pip install boto3
 
@@ -20,3 +21,8 @@ make deb
 sudo make install
 
 sudo mkdir -p /etc/ansible/
+
+easy_install --upgrade pip
+apt-get install -y -q libssl-dev
+apt-get install -y -q libffi6 libffi-dev
+pip install cryptography
